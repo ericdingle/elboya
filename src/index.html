@@ -1,0 +1,41 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Elboya Torrent</title>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/util.js"></script>
+  </head>
+  <body>
+    <h3>Elboya Torrent</h3>
+
+    <hr/>
+
+    <table>
+      <tr>
+        <td>Magnet URL:</td>
+        <td><input type="text" id="magnet_url"/></td>
+      </tr>
+      <tr>
+        <td>Save path:</td>
+        <td><input type="text" id="save_path"/></td>
+      </tr>
+      <tr>
+        <td><button id="add_torrent">Add Torrent</button></td>
+      </tr>
+    </table>
+    
+    <hr/>
+
+    <table id="torrents" border="1">
+      <tr>
+        <th>Name</th>
+        <th>Progress</th>
+        <th>Download Rate</th>
+        <th>Upload Rate</th>
+        <th>Peers</th>
+        <th>Status</th>
+      </tr>
+    </table>
+  </body>
+</html>
