@@ -2,40 +2,58 @@
 <html>
   <head>
     <title>Elboya Torrent</title>
-    <script src="js/jquery-1.8.3.min.js"></script>
+    <!-- Reset -->
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <!-- jQuery -->
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css"/>
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+    <!-- DataTable -->
+    <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    <!-- Elboya -->
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
     <script src="js/main.js"></script>
     <script src="js/util.js"></script>
   </head>
   <body>
-    <h3>Elboya Torrent</h3>
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">Current Torrents</a></li>
+        <li><a href="#tabs-2">Add Torrent</a></li>
+      </ul>
 
-    <hr/>
+      <div id="tabs-1">
+        <table id="torrents" border="1" cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Progress</th>
+              <th>Download Rate</th>
+              <th>Upload Rate</th>
+              <th>Peers</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
 
-    <table>
-      <tr>
-        <td>Magnet URL:</td>
-        <td><input type="text" id="magnet_url"/></td>
-      </tr>
-      <tr>
-        <td>Save path:</td>
-        <td><input type="text" id="save_path"/></td>
-      </tr>
-      <tr>
-        <td><button id="add_torrent">Add Torrent</button></td>
-      </tr>
-    </table>
-    
-    <hr/>
-
-    <table id="torrents" border="1">
-      <tr>
-        <th>Name</th>
-        <th>Progress</th>
-        <th>Download Rate</th>
-        <th>Upload Rate</th>
-        <th>Peers</th>
-        <th>Status</th>
-      </tr>
-    </table>
+      <div id="tabs-2">
+        <table>
+          <tr>
+            <td>Magnet URL:</td>
+            <td><input type="text" id="magnet_url"/></td>
+          </tr>
+          <tr>
+            <td>Save path:</td>
+            <td><input type="text" id="save_path"/></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><button id="add_torrent">Add Torrent</button></td>
+          </tr>
+        </table>
+      </div>
+    <div/>
   </body>
 </html>

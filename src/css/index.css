@@ -1,0 +1,8 @@
+body {
+  font-size: 10pt;
+  margin: 5px;
+}
+
+input[type=text] {
+  width: 400px;
+}
