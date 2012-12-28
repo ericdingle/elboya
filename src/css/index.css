@@ -3,6 +3,25 @@ body {
   margin: 5px;
 }
 
+#torrents tbody tr td {
+  vertical-align: middle;
+}
+
+.col-center {
+  text-align: center;
+}
+
+.ui-progressbar {
+  position: relative;
+}
+
+.ui-progressbar-label {
+  line-height: 1.8em;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+
 input[type=text] {
   width: 400px;
 }

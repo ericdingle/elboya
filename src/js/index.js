@@ -6,17 +6,29 @@ $(document).ready(function() {
 
   var table = $('#torrents').dataTable({
     aoColumns: [
-      {mData: 'name'},
-      {mData: formatData('status.progress', util.toPercentage)},
-      {mData: formatData('status.download_rate', util.toByteRate)},
-      {mData: formatData('status.upload_rate', util.toByteRate)},
-      {mData: 'status.num_peers'},
-      {mData: 'status.state'},
+      {mData: 'name',
+       sWidth: '30%'},
+      {mData: 'status.progress',
+       sWidth: '20%'},
+      {mData: formatByteRate('status.download_rate'),
+       sClass: 'col-center',
+       sWidth: '13%'},
+      {mData: formatByteRate('status.upload_rate'),
+       sClass: 'col-center',
+       sWidth: '13%'},
+      {mData: 'status.num_peers',
+       sClass: 'col-center',
+       sWidth: '8%'},
+      {mData: 'status.state',
+       sClass: 'col-center',
+       sWidth: '16%'},
     ],
     bFilter: false,
+    bJQueryUI: true,
     bInfo: false,
     bPaginate: false,
     bSort: false,
+    fnRowCallback: formatPercentage,
     sAjaxDataProp: 'torrents',
     sAjaxSource: 'ajax/get_torrents',
   });
@@ -28,7 +40,21 @@ $(document).ready(function() {
   $('#add_torrent').button().click(addTorrent);
 });
 
-function formatData(dataPath, formatFunc) {
+function formatPercentage(row, data) {
+  var div = $(
+      '<div>' +
+        '<span class="ui-progressbar-label">' +
+          util.toPercentage(data.status.progress) +
+        '</span>' +
+      '</div>');
+
+  var value = Math.round(data.status.progress * 100);
+  div.progressbar({value: value});
+
+  $('td:eq(1)', row).html(div);
+}
+
+function formatByteRate(dataPath) {
   return function(data, type, val) {
     // Traverse the dot notation path.
     var parts = dataPath.split('.');
@@ -38,7 +64,7 @@ function formatData(dataPath, formatFunc) {
 
     // Return the formatted data for display.
     if (type == 'display')
-      return formatFunc(data);
+      return util.toByteRate(data);
 
     return data;
   };
