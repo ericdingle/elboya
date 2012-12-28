@@ -10,10 +10,12 @@ $(document).ready(function() {
        sWidth: '30%'},
       {mData: 'status.progress',
        sWidth: '20%'},
-      {mData: formatByteRate('status.download_rate'),
+      {mData: 'status.download_rate',
+       mRender: formatByteRate,
        sClass: 'col-center',
        sWidth: '13%'},
-      {mData: formatByteRate('status.upload_rate'),
+      {mData: 'status.upload_rate',
+       mRender: formatByteRate,
        sClass: 'col-center',
        sWidth: '13%'},
       {mData: 'status.num_peers',
@@ -54,20 +56,12 @@ function formatPercentage(row, data) {
   $('td:eq(1)', row).html(div);
 }
 
-function formatByteRate(dataPath) {
-  return function(data, type, val) {
-    // Traverse the dot notation path.
-    var parts = dataPath.split('.');
-    for (var i = 0; i < parts.length; i++) {
-      data = data[parts[i]];
-    }
+function formatByteRate(data, type, full) {
+  // Return the formatted data for display.
+  if (type == 'display')
+    return util.toByteRate(data);
 
-    // Return the formatted data for display.
-    if (type == 'display')
-      return util.toByteRate(data);
-
-    return data;
-  };
+  return data;
 }
 
 function addTorrent(event) {
