@@ -4,39 +4,44 @@ $(document).ready(function() {
   // UI.
   $('#tabs').tabs();
 
-  $('#torrents').dataTable({
+  var table = $('#torrents').dataTable({
+    aoColumns: [
+      {mData: 'name'},
+      {mData: formatData('status.progress', util.toPercentage)},
+      {mData: formatData('status.download_rate', util.toByteRate)},
+      {mData: formatData('status.upload_rate', util.toByteRate)},
+      {mData: 'status.num_peers'},
+      {mData: 'status.state'},
+    ],
     bFilter: false,
     bInfo: false,
     bPaginate: false,
     bSort: false,
+    sAjaxDataProp: 'torrents',
+    sAjaxSource: 'ajax/get_torrents',
   });
-
-  updateTorrents();
+  setInterval(function() {
+    table.fnReloadAjax();
+  }, 1000);
 
   // Event handlers.
   $('#add_torrent').button().click(addTorrent);
 });
 
-function updateTorrents() {
-  $.get('ajax/get_torrents', function(data) {
-    var table = $('#torrents').dataTable();
-    table.fnClearTable();
-
-    for (var i = 0; i < data.length; ++i) {
-      var torrent = data[i];
-      var status = torrent.status;
-      table.fnAddData([
-        torrent.name,
-        util.toPercentage(status.progress),
-        util.toByteRate(status.download_rate),
-        util.toByteRate(status.upload_rate),
-        status.num_peers,
-        status.state
-      ])
+function formatData(dataPath, formatFunc) {
+  return function(data, type, val) {
+    // Traverse the dot notation path.
+    var parts = dataPath.split('.');
+    for (var i = 0; i < parts.length; i++) {
+      data = data[parts[i]];
     }
 
-    setTimeout(updateTorrents, 1000);    
-  }, "json");
+    // Return the formatted data for display.
+    if (type == 'display')
+      return formatFunc(data);
+
+    return data;
+  };
 }
 
 function addTorrent(event) {

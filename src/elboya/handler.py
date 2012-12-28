@@ -10,7 +10,8 @@ from elboya import torrent
 class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
   def do_GET(self):
-    if self.path == '/ajax/get_torrents':
+    path = self.path.split('?', 1)[0]
+    if path == '/ajax/get_torrents':
       self.GetTorrents()
     else:
       SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
@@ -22,10 +23,11 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     self.send_header('Content-Type', mimetypes.guess_extension('.json'))
     self.end_headers()
 
-    json.dump(torrents, self.wfile, cls=torrent.JSONEncoder)
+    json.dump({'torrents': torrents}, self.wfile, cls=torrent.JSONEncoder)
 
   def do_POST(self):
-    if self.path == '/ajax/add_torrent':
+    path = self.path.split('?', 1)[0]
+    if path == '/ajax/add_torrent':
       self.AddTorrent()
     else:
       self.send_error(httplib.BAD_REQUEST)
