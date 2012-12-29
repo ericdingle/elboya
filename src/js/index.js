@@ -5,25 +5,25 @@ $(document).ready(function() {
   $('#tabs').tabs();
 
   var table = $('#torrents').dataTable({
+    aoColumnDefs: [
+      {aTargets: [2, 3, 4, 5],
+       sClass: 'col-center'},
+    ],
     aoColumns: [
       {mData: 'name',
        sWidth: '30%'},
       {mData: 'status.progress',
-       mRender: formatPercentage,
+       mRender: renderProgressBar,
        sWidth: '20%'},
       {mData: 'status.download_rate',
        mRender: formatByteRate,
-       sClass: 'col-center',
        sWidth: '13%'},
       {mData: 'status.upload_rate',
        mRender: formatByteRate,
-       sClass: 'col-center',
        sWidth: '13%'},
       {mData: 'status.num_peers',
-       sClass: 'col-center',
        sWidth: '8%'},
       {mData: 'status.state',
-       sClass: 'col-center',
        sWidth: '16%'},
     ],
     bFilter: false,
@@ -42,7 +42,7 @@ $(document).ready(function() {
   $('#add_torrent').button().click(addTorrent);
 });
 
-function formatPercentage(data, type, full) {
+function renderProgressBar(data, type, full) {
   if (type == 'display') {
     var div = $(
         '<div>' +
