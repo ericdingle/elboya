@@ -67,7 +67,8 @@ function formatByteRate(data, type) {
 
 function renderRemoveButton(cell, data, torrent) {
   var button = $('<button>Remove</button>');
-  button.button({icons: {primary: 'ui-icon-trash'},
+  button.button({disabled: torrent.info.hash == '',
+                 icons: {primary: 'ui-icon-trash'},
                  text: false});
   button.click(torrent.info.hash, removeTorrent);
   $(cell).html(button);
