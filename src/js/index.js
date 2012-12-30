@@ -34,6 +34,9 @@ $(document).ready(function() {
     bInfo: false,
     bPaginate: false,
     bSort: false,
+    oLanguage: {
+      sEmptyTable: 'No torrents',
+    },
     sAjaxDataProp: 'torrents',
     sAjaxSource: 'ajax/get_torrents',
   });
