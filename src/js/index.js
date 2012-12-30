@@ -84,7 +84,7 @@ function removeTorrent(event) {
 }
 
 function addTorrent(event) {
-  $('#add_torrent').button({disabled: true});
+  $(this).button('disable');
 
   var magnet_url = $('#magnet_url').val();
   var save_path = $('#save_path').val();
@@ -94,7 +94,7 @@ function addTorrent(event) {
 }
 
 function addTorrentSuccess() {
-  $('#add_torrent').button({disabled: false});
+  $('#add_torrent').button('enable');
 
   $('#magnet_url').val('');
   $('#save_path').val('');
