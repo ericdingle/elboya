@@ -15,8 +15,16 @@
     <script src="js/jquery.dataTables.fnReloadAjax.js"></script>
     <!-- Elboya -->
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
-    <script src="js/index.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/torrents.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/util.js"></script>
+    <script>
+    $(document).ready(function() {
+      ui.init();
+      events.init();
+    });
+    </script>
   </head>
   <body>
     <div id="tabs">

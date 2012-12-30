@@ -1,10 +1,19 @@
+var ui = {};
+
 (function() {
 
-$(document).ready(function() {
-  // UI.
-  $('#tabs').tabs();
+ui.init = function() {
+  initTabs();
+  initTorrents();
+  initButtons();
+};
 
-  var table = $('#torrents').dataTable({
+function initTabs() {
+  $('#tabs').tabs();
+}
+
+function initTorrents() {
+  $('#torrents').dataTable({
     aoColumnDefs: [
       {aTargets: [2, 3, 4, 5, 6],
        sClass: 'col-center'},
@@ -15,11 +24,11 @@ $(document).ready(function() {
       {fnCreatedCell: renderProgressBar,
        mData: 'status.progress',
        sWidth: '20%'},
-      {mData: 'status.download_rate',
-       mRender: formatByteRate,
+      {fnCreatedCell: renderByteRate,
+       mData: 'status.download_rate',
        sWidth: '12%'},
-      {mData: 'status.upload_rate',
-       mRender: formatByteRate,
+      {fnCreatedCell: renderByteRate,
+       mData: 'status.upload_rate',
        sWidth: '12%'},
       {mData: 'status.num_peers',
        sWidth: '6%'},
@@ -40,13 +49,7 @@ $(document).ready(function() {
     sAjaxDataProp: 'torrents',
     sAjaxSource: 'ajax/get_torrents',
   });
-  setInterval(function() {
-    table.fnReloadAjax();
-  }, 1000);
-
-  // Event handlers.
-  $('#add_torrent').button().click(addTorrent);
-});
+}
 
 function renderProgressBar(cell, data) {
   var div = $(
@@ -61,45 +64,21 @@ function renderProgressBar(cell, data) {
   $(cell).html(div);
 }
 
-function formatByteRate(data, type) {
-  if (type == 'display')
-    return util.toByteRate(data);
-
-  return data;
+function renderByteRate(cell, data) {
+  $(cell).html(util.toByteRate(data));
 }
 
 function renderRemoveButton(cell, data, torrent) {
-  var button = $('<button>Remove</button>');
+  var button = $('<button class="remove_torrent">Remove</button>');
+  button.attr('hash', torrent.info.hash);
   button.button({disabled: torrent.info.hash == '',
                  icons: {primary: 'ui-icon-trash'},
                  text: false});
-  button.click(torrent.info.hash, removeTorrent);
   $(cell).html(button);
 }
 
-function removeTorrent(event) {
-  $(this).button('disable');
-
-  $.post('ajax/remove_torrent', {hash: event.data});
-}
-
-function addTorrent(event) {
-  $(this).button('disable');
-
-  var magnet_url = $('#magnet_url').val();
-  var save_path = $('#save_path').val();
-
-  $.post('ajax/add_torrent', {magnet_url: magnet_url, save_path: save_path},
-         addTorrentSuccess);
-}
-
-function addTorrentSuccess() {
-  $('#add_torrent').button('enable');
-
-  $('#magnet_url').val('');
-  $('#save_path').val('');
-
-  $('#tabs').tabs({active: 0});
+function initButtons() {
+  $('#add_torrent').button();
 }
 
 })();
