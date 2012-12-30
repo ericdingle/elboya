@@ -5,8 +5,16 @@ class JSONEncoder(json.JSONEncoder):
 
   def default(self, obj):
     if isinstance(obj, libtorrent.torrent_handle):
-      status = obj.status();
+      hash = ''
+      if obj.has_metadata():
+        hash = str(obj.get_torrent_info().info_hash())
+
+      status = obj.status()
+
       return {
+          'info': {
+            'hash': hash
+          },
           'name': obj.name(),
           'status': {
               'progress': status.progress,

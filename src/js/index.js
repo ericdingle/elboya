@@ -6,25 +6,28 @@ $(document).ready(function() {
 
   var table = $('#torrents').dataTable({
     aoColumnDefs: [
-      {aTargets: [2, 3, 4, 5],
+      {aTargets: [2, 3, 4, 5, 6],
        sClass: 'col-center'},
     ],
     aoColumns: [
       {mData: 'name',
        sWidth: '30%'},
-      {mData: 'status.progress',
-       mRender: renderProgressBar,
+      {fnCreatedCell: renderProgressBar,
+       mData: 'status.progress',
        sWidth: '20%'},
       {mData: 'status.download_rate',
        mRender: formatByteRate,
-       sWidth: '13%'},
+       sWidth: '12%'},
       {mData: 'status.upload_rate',
        mRender: formatByteRate,
-       sWidth: '13%'},
+       sWidth: '12%'},
       {mData: 'status.num_peers',
-       sWidth: '8%'},
+       sWidth: '6%'},
       {mData: 'status.state',
-       sWidth: '16%'},
+       sWidth: '14%'},
+      {fnCreatedCell: renderRemoveButton,
+       mData: null,
+       sWidth: '6%'},
     ],
     bFilter: false,
     bJQueryUI: true,
@@ -42,29 +45,38 @@ $(document).ready(function() {
   $('#add_torrent').button().click(addTorrent);
 });
 
-function renderProgressBar(data, type, full) {
-  if (type == 'display') {
-    var div = $(
-        '<div>' +
-          '<span class="ui-progressbar-label">' +
-            util.toPercentage(data) +
-          '</span>' +
-        '</div>');
+function renderProgressBar(cell, data) {
+  var div = $(
+      '<div>' +
+        '<span class="ui-progressbar-label">' +
+          util.toPercentage(data) +
+        '</span>' +
+      '</div>');
 
-    var value = Math.round(data * 100);
-    div.progressbar({value: value});
-
-    return div.wrap('<div>').parent().html();
-  }
-
-  return data;
+  var value = Math.round(data * 100);
+  div.progressbar({value: value});
+  $(cell).html(div);
 }
 
-function formatByteRate(data, type, full) {
+function formatByteRate(data, type) {
   if (type == 'display')
     return util.toByteRate(data);
 
   return data;
+}
+
+function renderRemoveButton(cell, data, torrent) {
+  var button = $('<button>Remove</button>');
+  button.button({icons: {primary: 'ui-icon-trash'},
+                 text: false});
+  button.click(torrent.info.hash, removeTorrent);
+  $(cell).html(button);
+}
+
+function removeTorrent(event) {
+  $(this).button('disable');
+
+  $.post('ajax/remove_torrent', {hash: event.data});
 }
 
 function addTorrent(event) {
