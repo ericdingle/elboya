@@ -5,18 +5,18 @@ class Settings(object):
   _SETTINGS_FILE = 'settings.json'
 
   def __init__(self):
-    self._settings = {}
+    self._values = {}
     self._types = {}
 
-    self._Define('default_save_path', str, '')
-    self._Define('download_rate_limit', int, -1)
-    self._Define('upload_rate_limit', int, -1)
+    self._Define('default_save_path', '')
+    self._Define('download_rate_limit', -1)
+    self._Define('upload_rate_limit', -1)
 
     self._Load()
 
-  def _Define(self, name, setting_type, default_value):
-    self._settings[name] = default_value
-    self._types[name] = setting_type
+  def _Define(self, name, default_value):
+    self._values[name] = default_value
+    self._types[name] = type(default_value)
 
   def _Load(self):
     # This function assumes that the settings file was written by this class,
@@ -27,23 +27,23 @@ class Settings(object):
       return
 
     settings = json.load(f)
-    for name, value in self._settings.iteritems():
+    for name, value in self._values.iteritems():
       if name in settings:
-        self._settings[name] = self._settings[name]
+        self._values[name] = self._values[name]
 
     f.close()
 
   def _Save(self):
     f = open(self._SETTINGS_FILE, 'w')
-    json.dump(self._settings, f, indent=2, separators=(',', ': '),
+    json.dump(self._values, f, indent=2, separators=(',', ': '),
               sort_keys=True)
     f.close()
 
   def Get(self, name):
-    return self._settings.get(name)
+    return self._values.get(name)
 
   def Set(self, name, value):
-    if name not in self._settings:
+    if name not in self._values:
       return False
 
     try:
@@ -51,7 +51,7 @@ class Settings(object):
     except ValueError:
       return False
 
-    self._settings[name] = value
+    self._values[name] = value
     self._Save()
 
     return True
