@@ -16,6 +16,7 @@
     <!-- Elboya -->
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
     <script src="js/events.js"></script>
+    <script src="js/settings.js"></script>
     <script src="js/torrents.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/util.js"></script>
@@ -23,6 +24,9 @@
     $(document).ready(function() {
       ui.init();
       events.init();
+      settings.init(function(settings) {
+        ui.initSettings(settings);
+      });
     });
     </script>
   </head>
@@ -31,6 +35,7 @@
       <ul>
         <li><a href="#tabs-1">Current Torrents</a></li>
         <li><a href="#tabs-2">Add Torrent</a></li>
+        <li><a href="#tabs-3">Settings</a></li>
       </ul>
 
       <div id="tabs-1">
@@ -54,7 +59,13 @@
         <input type="text" id="magnet_url" class="ui-widget-content ui-corner-all"/>
         <label for="save_path">Save Path</label>
         <input type="text" id="save_path" class="ui-widget-content ui-corner-all"/>
-        <button id="add_torrent">Add</button></td>
+        <button id="add_torrent">Add</button>
+      </div>
+
+      <div id="tabs-3">
+        <label for="default_save_path">Default Save Path</label>
+        <input type="text" id="default_save_path" class="ui-widget-content ui-corner-all"/>
+        <button id="save_settings">Save</button>
       </div>
     <div/>
   </body>

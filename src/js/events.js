@@ -6,6 +6,8 @@ events.init = function() {
   $('#add_torrent').click(addTorrent);
   $('#torrents tbody').on('click', '.remove_torrent', removeTorrent);
   updateTorrents();
+
+  $('#save_settings').click(saveSettings);
 };
 
 function addTorrent() {
@@ -25,8 +27,8 @@ function addTorrentSuccess() {
   $('#tabs').tabs({active: 0});
 }
 
-function addTorrentError(data, status) {
-  alert('Could not add torrent: ' + status);
+function addTorrentError(data, status, jqxhr) {
+  alert('Could not add torrent: ' + jqxhr.statusText);
 }
 
 function addTorrentComplete() {
@@ -42,13 +44,32 @@ function removeTorrent() {
   torrents.remove(hash, null, removeTorrentError);
 }
 
-function removeTorrentError(data, status) {
-  alert('Could not remove torrent: ' + status);
+function removeTorrentError(data, status, jqxhr) {
+  alert('Could not remove torrent: ' + jqxhr.statusText);
 }
 
 function updateTorrents() {
   $('#torrents').dataTable().fnReloadAjax();
   setTimeout(updateTorrents, 1000);
+}
+
+function saveSettings() {
+  $(this).button('disable');
+
+  settings.set('default_save_path', $('#default_save_path').val());
+  settings.save(saveSettingsSuccess, saveSettingsError, saveSettingsComplete);
+}
+
+function saveSettingsSuccess() {
+  $('#tabs').tabs({active: 0});
+}
+
+function saveSettingsError(data, status, jqxhr) {
+  alert('Could not save settings: ' + jqxhr.statusText);
+}
+
+function saveSettingsComplete() {
+  $('#save_settings').button('enable');
 }
 
 })();

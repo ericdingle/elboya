@@ -1,18 +1,31 @@
 var util = {};
 
+(function() {
+
+util.addXhrCallbacks = function(jqxhr, success, error, complete) {
+  if (success)
+    jqxhr.success(success);
+  if (error)
+    jqxhr.error(error);
+  if (complete)
+    jqxhr.complete(complete);
+};
+
 util.toPercentage = function(num) {
   num *= 100;
   return num.toFixed(2) + ' %';
 };
 
-util.byteRateUnits = ['B/s', 'kB/s', 'MB/s'];
+var byteRateUnits = ['B/s', 'kB/s', 'MB/s'];
 
 util.toByteRate = function(num) {
-  for (var i = 0; i < util.byteRateUnits.length - 1; ++i) {
+  for (var i = 0; i < byteRateUnits.length - 1; ++i) {
     if (num < 1000)
       break;
     num /= 1000;
   }
 
-  return num.toFixed(1) + ' ' + util.byteRateUnits[i];
+  return num.toFixed(1) + ' ' + byteRateUnits[i];
 };
+
+})();

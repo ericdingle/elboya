@@ -3,10 +3,15 @@ var ui = {};
 (function() {
 
 ui.init = function() {
+  initButtons();
   initTabs();
   initTorrents();
-  initButtons();
 };
+
+function initButtons() {
+  $('#add_torrent').button();
+  $('#save_settings').button();
+}
 
 function initTabs() {
   $('#tabs').tabs();
@@ -77,8 +82,9 @@ function renderRemoveButton(cell, data, torrent) {
   $(cell).html(button);
 }
 
-function initButtons() {
-  $('#add_torrent').button();
-}
+ui.initSettings = function(settings) {
+  if (settings.default_save_path)
+    $('#default_save_path').val(settings.default_save_path);
+};
 
 })();
