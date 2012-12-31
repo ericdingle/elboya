@@ -11,16 +11,25 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
   def do_GET(self):
     path = self.path.split('?', 1)[0]
-    if path == '/ajax/get_torrents':
+    if path == '/ajax/get_settings':
+      self.GetSettings()
+    elif path == '/ajax/get_torrents':
       self.GetTorrents()
     else:
       SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+
+  def GetSettings(self):
+    self.send_response(httplib.OK)
+    self.send_header('Content-Type', mimetypes.types_map['.json'])
+    self.end_headers()
+
+    json.dump(self.server.settings.GetAll(), self.wfile)
 
   def GetTorrents(self):
     torrents = self.server.session.GetTorrents()
 
     self.send_response(httplib.OK)
-    self.send_header('Content-Type', mimetypes.guess_extension('.json'))
+    self.send_header('Content-Type', mimetypes.types_map['.json'])
     self.end_headers()
 
     json.dump({'torrents': torrents}, self.wfile, cls=torrent.JSONEncoder)
@@ -31,6 +40,8 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
       self.AddTorrent()
     elif path == '/ajax/remove_torrent':
       self.RemoveTorrent()
+    elif path == '/ajax/save_settings':
+      self.SaveSettings()
     else:
       self.send_error(httplib.NOT_FOUND)
 
@@ -64,5 +75,17 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     if not self.server.session.RemoveTorrent(params['hash'][0]):
       self.send_error(httplib.BAD_REQUEST, 'Invalid hash')
       return
+
+    self.send_response(httplib.OK)
+
+  def SaveSettings(self):
+    params = self.GetPostParams()
+
+    for name, value in params.iteritems():
+      if not self.server.settings.Set(name, value[0]):
+        self.send_error(httplib.BAD_REQUEST, 'Invalid setting')
+        return
+
+    self.server.settings.Save()
 
     self.send_response(httplib.OK)
