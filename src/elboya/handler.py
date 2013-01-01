@@ -17,7 +17,7 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
       SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
   def GetTorrents(self):
-    torrents = self.server.session.get_torrents()
+    torrents = self.server.session.GetTorrents()
 
     self.send_response(httplib.OK)
     self.send_header('Content-Type', mimetypes.guess_extension('.json'))
@@ -49,9 +49,8 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
       self.send_error(httplib.BAD_REQUEST, 'Missing save path')
       return
 
-    magnet_url = params['magnet_url'][0]
-    params = {'save_path': params['save_path'][0]}
-    libtorrent.add_magnet_uri(self.server.session, magnet_url, params)
+    self.server.session.AddTorrent(params['magnet_url'][0],
+                                   params['save_path'][0])
 
     self.send_response(httplib.OK)
 
@@ -62,17 +61,8 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
       self.send_error(httplib.BAD_REQUEST, 'Missing hash')
       return
 
-    try:
-      hash = params['hash'][0].decode('hex')
-    except TypeError:
+    if not self.server.session.RemoveTorrent(params['hash'][0]):
       self.send_error(httplib.BAD_REQUEST, 'Invalid hash')
       return
-
-    torrent = self.server.session.find_torrent(libtorrent.big_number(hash));
-    if not torrent.is_valid():
-      self.send_error(httplib.BAD_REQUEST, 'Invalid torrent')
-      return
-
-    self.server.session.remove_torrent(torrent)
 
     self.send_response(httplib.OK)
