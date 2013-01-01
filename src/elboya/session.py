@@ -21,11 +21,11 @@ class Session(object):
     except TypeError:
       return False
 
-    torrent = self.server.session.find_torrent(hash)
+    torrent = self._session.find_torrent(hash)
     if not torrent.is_valid():
       return False
 
-    self.server.session.remove_torrent(torrent)
+    self._session.remove_torrent(torrent)
     return True
 
   def SetDownloadRateLimit(self, limit):
