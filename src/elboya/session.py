@@ -71,7 +71,7 @@ class TestSession(object):
     return torrents
 
   def RemoveTorrent(self, hash):
-    del self._torrents['hash']
+    del self._torrents[hash]
 
   def SetDownloadRateLimit(self, limit):
     pass
