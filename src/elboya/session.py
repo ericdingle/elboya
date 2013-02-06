@@ -42,14 +42,15 @@ class TestSession(object):
 
   def AddTorrent(self, magnet_url, save_path):
     self._next_hash += 1
-    self._torrents[self._next_hash] = torrent.TestHandle(self._next_hash,
-                                                         magnet_url)
+    hash = str(self._next_hash)
+    self._torrents[hash] = torrent.TestHandle(hash, magnet_url)
 
   def GetTorrents(self):
     return self._torrents.values()
 
   def RemoveTorrent(self, hash):
     del self._torrents[hash]
+    return True
 
   def SetDownloadRateLimit(self, limit):
     pass
