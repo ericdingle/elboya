@@ -13,7 +13,6 @@ events.init = function() {
 };
 
 function tabsActivate(event, ui) {
-  console.log(ui);
   if ($('#tabs').tabs('option', 'active') == 1) {
     $('#magnet_url').val('');
     $('#save_path').val(settings.get('default_save_path'));
