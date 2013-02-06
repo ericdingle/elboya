@@ -1,6 +1,6 @@
 import libtorrent
-import random
-import time
+
+from elboya import torrent
 
 class Session(object):
 
@@ -42,33 +42,11 @@ class TestSession(object):
 
   def AddTorrent(self, magnet_url, save_path):
     self._next_hash += 1
-    self._torrents[self._next_hash] = {
-        'name': magnet_url,
-        'time': time.time(),
-        'duration': 60 * random.randint(1, 10)
-    }
+    self._torrents[self._next_hash] = torrent.TestHandle(self._next_hash,
+                                                         magnet_url)
 
   def GetTorrents(self):
-    cur_time = time.time()
-
-    torrents = []
-    for hash, torrent in self._torrents.iteritems():
-      progress = min((cur_time - torrent['time']) / torrent['duration'], 1.0)
-      torrents.append({
-          'info': {
-            'hash': hash
-          },
-          'name': torrent['name'],
-          'status': {
-            'progress': progress,
-            'download_rate': 100,
-            'upload_rate': 10,
-            'num_peers': 5,
-            'state': 'seeding' if progress == 1.0 else 'download'
-          }
-      })
-
-    return torrents
+    return self._torrents.values()
 
   def RemoveTorrent(self, hash):
     del self._torrents[hash]
