@@ -3,12 +3,22 @@ var events = {};
 (function() {
 
 events.init = function() {
+  $('#tabs').tabs({activate: tabsActivate});
+
   $('#add_torrent').click(addTorrent);
   $('#torrents tbody').on('click', '.remove_torrent', removeTorrent);
   updateTorrents();
 
   $('#save_settings').click(saveSettings);
 };
+
+function tabsActivate(event, ui) {
+  console.log(ui);
+  if ($('#tabs').tabs('option', 'active') == 1) {
+    $('#magnet_url').val('');
+    $('#save_path').val(settings.get('default_save_path'));
+  }
+}
 
 function addTorrent() {
   $(this).button('disable');
@@ -21,9 +31,6 @@ function addTorrent() {
 }
 
 function addTorrentSuccess() {
-  $('#magnet_url').val('');
-  $('#save_path').val('');
-
   $('#tabs').tabs({active: 0});
 }
 

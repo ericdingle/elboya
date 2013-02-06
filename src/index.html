@@ -22,11 +22,9 @@
     <script src="js/util.js"></script>
     <script>
     $(document).ready(function() {
+      settings.init()
       ui.init();
       events.init();
-      settings.init(function(settings) {
-        ui.initSettings(settings);
-      });
     });
     </script>
   </head>

@@ -3,19 +3,15 @@ var ui = {};
 (function() {
 
 ui.init = function() {
-  initButtons();
-  initTabs();
-  initTorrents();
-};
-
-function initButtons() {
   $('#add_torrent').button();
   $('#save_settings').button();
-}
 
-function initTabs() {
   $('#tabs').tabs();
-}
+
+  initTorrents();
+
+  settings.onInit.done(initSettings);
+};
 
 function initTorrents() {
   $('#torrents').dataTable({
@@ -82,9 +78,8 @@ function renderRemoveButton(cell, data, torrent) {
   $(cell).html(button);
 }
 
-ui.initSettings = function(settings) {
-  if (settings.default_save_path)
-    $('#default_save_path').val(settings.default_save_path);
-};
+function initSettings() {
+  $('#default_save_path').val(settings.get('default_save_path'));
+}
 
 })();

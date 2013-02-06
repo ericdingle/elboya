@@ -2,22 +2,29 @@ var settings = {};
 
 (function() {
 
-settings.init = function(callback) {
+settings.init = function() {
   var jqxhr = $.getJSON('/ajax/get_settings');
   jqxhr.success(initSuccess);
-  jqxhr.success(callback);
 };
+
+settings.onInit = $.Deferred();
 
 var values = null;
 
 function initSuccess(data) {
   values = data;
+  settings.onInit.resolve();
 }
+
+settings.get = function(name) {
+  if (!(name in values))
+    throw('Invalid setting: ' + name);
+  return values[name];
+};
 
 settings.set = function(name, value) {
   if (!(name in values))
-    throw('Invalid setting: ' + name)
-
+    throw('Invalid setting: ' + name);
   values[name] = value;
 };
 
