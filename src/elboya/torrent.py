@@ -24,7 +24,8 @@ class JSONEncoder(json.JSONEncoder):
               'upload_rate': status.upload_rate,
               'num_peers': status.num_peers,
               'state': str(status.state)
-          }
+          },
+          'total_size': obj.total_size()
       }
 
     return super(JSONEncoder, self).default(obj)
@@ -54,7 +55,7 @@ class TestHandle(object):
 
     self._start_time = time.time()
     self._duration = 60 * random.randint(1, 9) + random.randint(0, 60)
-    self._size = (50 + random.randint(0, 100)) * 1024 * 1024
+    self._total_size = (50 + random.randint(0, 100)) * 1024 * 1024
 
   def has_metadata(self):
     return True
@@ -68,8 +69,9 @@ class TestHandle(object):
   def status(self):
     cur_time = time.time()
     progress = min((cur_time - self._start_time) / self._duration, 1.0)
+
     if progress < 1:
-      download_rate = (self._size / self._duration) + 200 * random.randint(-5, 5)
+      download_rate = (self._total_size / self._duration) + 200 * random.randint(-5, 5)
       upload_rate = download_rate / 50
       num_peers = 10 + int(20 * progress) + random.randint(-1, 1)
       status = 'downloading'
@@ -78,4 +80,8 @@ class TestHandle(object):
       upload_rate = 0
       num_peers = 0
       status = 'seeding'
+
     return TestStatus(progress, download_rate, upload_rate, num_peers, status)
+
+  def total_size(self):
+    return self._total_size
