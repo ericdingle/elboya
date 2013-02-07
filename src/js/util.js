@@ -2,15 +2,6 @@ var util = {};
 
 (function() {
 
-util.addXhrCallbacks = function(jqxhr, success, error, complete) {
-  if (success)
-    jqxhr.success(success);
-  if (error)
-    jqxhr.error(error);
-  if (complete)
-    jqxhr.complete(complete);
-};
-
 util.toPercentage = function(num) {
   num *= 100;
   return num.toFixed(2) + ' %';

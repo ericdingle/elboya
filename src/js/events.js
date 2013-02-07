@@ -25,19 +25,21 @@ function addTorrent() {
   var magnet_url = $('#magnet_url').val();
   var save_path = $('#save_path').val();
 
-  torrents.add(magnet_url, save_path, addTorrentSuccess, addTorrentError,
-               addTorrentComplete)
+  torrents.add(magnet_url, save_path)
+      .done(addTorrentDone)
+      .fail(addTorrentFail)
+      .always(addTorrentAlways);
 }
 
-function addTorrentSuccess() {
+function addTorrentDone() {
   $('#tabs').tabs({active: 0});
 }
 
-function addTorrentError(data, status, jqxhr) {
-  alert('Could not add torrent: ' + jqxhr.statusText);
+function addTorrentFail(jqxhr, textStatus) {
+  alert('Could not add torrent: ' + textStatus);
 }
 
-function addTorrentComplete() {
+function addTorrentAlways() {
   $('#add_torrent').button('enable');
 }
 
@@ -47,11 +49,11 @@ function removeTorrent() {
 
   var hash = button.attr('hash');
 
-  torrents.remove(hash, null, removeTorrentError);
+  torrents.remove(hash).fail(removeTorrentFail);
 }
 
-function removeTorrentError(data, status, jqxhr) {
-  alert('Could not remove torrent: ' + jqxhr.statusText);
+function removeTorrentFail(jqxhr, textStatus) {
+  alert('Could not remove torrent: ' + textStatus);
 }
 
 function updateTorrents() {
@@ -63,18 +65,20 @@ function saveSettings() {
   $(this).button('disable');
 
   settings.set('default_save_path', $('#default_save_path').val());
-  settings.save(saveSettingsSuccess, saveSettingsError, saveSettingsComplete);
+  settings.save().done(saveSettingsDone)
+                 .fail(saveSettingsFail)
+                 .always(saveSettingsAlways);
 }
 
-function saveSettingsSuccess() {
+function saveSettingsDone() {
   $('#tabs').tabs({active: 0});
 }
 
-function saveSettingsError(data, status, jqxhr) {
-  alert('Could not save settings: ' + jqxhr.statusText);
+function saveSettingsFail(jqxhr, textStatus) {
+  alert('Could not save settings: ' + textStatus);
 }
 
-function saveSettingsComplete() {
+function saveSettingsAlways() {
   $('#save_settings').button('enable');
 }
 

@@ -29,8 +29,7 @@ settings.set = function(name, value) {
 };
 
 settings.save = function(success, error, complete) {
-  var jqxhr = $.post('/ajax/save_settings', values);
-  util.addXhrCallbacks(jqxhr, success, error, complete);
+  return $.post('/ajax/save_settings', values);
 };
 
 })();
