@@ -16,7 +16,7 @@ ui.init = function() {
 function initTorrents() {
   $('#torrents').dataTable({
     aoColumnDefs: [
-      {aTargets: [1, 3, 4, 5, 6, 7],
+      {aTargets: [1, 3, 4, 5, 6, 7, 8],
        sClass: 'col-center'},
     ],
     aoColumns: [
@@ -27,20 +27,23 @@ function initTorrents() {
        sWidth: '8%'},
       {fnCreatedCell: renderProgressBar,
        mData: 'status.progress',
-       sWidth: '16%'},
+       sWidth: '15%'},
       {fnCreatedCell: renderByteRate,
        mData: 'status.download_rate',
        sWidth: '10%'},
       {fnCreatedCell: renderByteRate,
        mData: 'status.upload_rate',
        sWidth: '10%'},
+      {fnCreatedCell: renderEta,
+       mData: null,
+       sWidth: '7%'},
       {mData: 'status.num_peers',
-       sWidth: '6%'},
+       sWidth: '5%'},
       {mData: 'status.state',
-       sWidth: '14%'},
+       sWidth: '10%'},
       {fnCreatedCell: renderRemoveButton,
        mData: null,
-       sWidth: '6%'},
+       sWidth: '5%'},
     ],
     bFilter: false,
     bJQueryUI: true,
@@ -61,6 +64,12 @@ function renderBytes(cell, data) {
 
 function renderByteRate(cell, data) {
   $(cell).html(util.toBytes(data) + '/s');
+}
+
+function renderEta(cell, data, torrent) {
+  var size = torrent.total_size * (1 - torrent.status.progress);
+  var seconds = Math.round(size / torrent.status.download_rate);
+  $(cell).html(util.toDuration(seconds));
 }
 
 function renderProgressBar(cell, data) {
