@@ -7,36 +7,42 @@ class JSONEncoder(json.JSONEncoder):
 
   def default(self, obj):
     if isinstance(obj, (libtorrent.torrent_handle, TestHandle)):
-      hash = ''
       if obj.has_metadata():
-        hash = str(obj.get_torrent_info().info_hash())
-
-      status = obj.status()
+        info = {
+            'hash': str(obj.get_torrent_info().info_hash()),
+            'total_size': obj.get_torrent_info().total_size()
+        }
+      else:
+        info = {
+            'hash': '',
+            'total_size': 0
+        }
 
       return {
-          'info': {
-            'hash': hash
-          },
+          'info': info,
           'name': obj.name(),
           'status': {
-              'progress': status.progress,
-              'download_rate': status.download_rate,
-              'upload_rate': status.upload_rate,
-              'num_peers': status.num_peers,
-              'state': str(status.state)
-          },
-          'total_size': obj.total_size()
+              'progress': obj.status().progress,
+              'download_rate': obj.status().download_rate,
+              'upload_rate': obj.status().upload_rate,
+              'num_peers': obj.status().num_peers,
+              'state': str(obj.status().state)
+          }
       }
 
     return super(JSONEncoder, self).default(obj)
 
 class TestInfo(object):
 
-  def __init__(self, hash):
+  def __init__(self, hash, total_size):
     self._hash = hash
+    self._total_size = total_size
 
   def info_hash(self):
     return self._hash
+
+  def total_size(self):
+    return self._total_size
 
 class TestStatus(object):
 
@@ -50,12 +56,11 @@ class TestStatus(object):
 class TestHandle(object):
 
   def __init__(self, hash, name):
-    self._info = TestInfo(hash)
+    self._info = TestInfo(hash, (50 + random.randint(0, 100)) * 1024 * 1024)
     self._name = name
 
     self._start_time = time.time()
     self._duration = 60 * random.randint(1, 9) + random.randint(0, 60)
-    self._total_size = (50 + random.randint(0, 100)) * 1024 * 1024
 
   def has_metadata(self):
     return True
@@ -71,7 +76,7 @@ class TestHandle(object):
     progress = min((cur_time - self._start_time) / self._duration, 1.0)
 
     if progress < 1:
-      download_rate = (self._total_size / self._duration) + 200 * random.randint(-5, 5)
+      download_rate = (self._info.total_size() / self._duration) + 200 * random.randint(-5, 5)
       upload_rate = download_rate / 50
       num_peers = 10 + int(20 * progress) + random.randint(-1, 1)
       status = 'downloading'
@@ -82,6 +87,3 @@ class TestHandle(object):
       status = 'seeding'
 
     return TestStatus(progress, download_rate, upload_rate, num_peers, status)
-
-  def total_size(self):
-    return self._total_size

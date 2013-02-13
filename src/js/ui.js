@@ -23,7 +23,7 @@ function initTorrents() {
       {mData: 'name',
        sWidth: '30%'},
       {fnCreatedCell: renderBytes,
-       mData: 'total_size',
+       mData: 'info.total_size',
        sWidth: '8%'},
       {fnCreatedCell: renderProgressBar,
        mData: 'status.progress',
@@ -67,7 +67,7 @@ function renderByteRate(cell, data) {
 }
 
 function renderEta(cell, data, torrent) {
-  var size = torrent.total_size * (1 - torrent.status.progress);
+  var size = torrent.info.total_size * (1 - torrent.status.progress);
   var seconds = Math.round(size / torrent.status.download_rate);
   $(cell).html(util.toDuration(seconds));
 }
