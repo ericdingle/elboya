@@ -10,7 +10,6 @@ events.init = function() {
   updateTorrents();
 
   $('#save_settings').click(saveSettings);
-  
 };
 
 function tabsActivate(event, ui) {
@@ -21,13 +20,13 @@ function tabsActivate(event, ui) {
     $('#save_path').val(settings.get('default_save_path'));
     $(document).on('keypress', function(e) {
       if (e.keyCode == 13) {
-       addTorrent(); 
+        addTorrent(); 
       }
     });
   } else if (activeTab == 2) {
     $(document).on('keypress', function(e) {
       if (e.keyCode == 13) {
-       saveSettings(); 
+        saveSettings(); 
       }
     });
   }

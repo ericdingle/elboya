@@ -1,5 +1,4 @@
 import json
-import os.path
 
 class Settings(object):
 
@@ -25,8 +24,7 @@ class Settings(object):
     
     try:
       f = open(self._SETTINGS_FILE, 'r')
-    except IOError as e:
-      print 'Error loading settings: ' + e.strerror
+    except IOError:
       return
 
     values = json.load(f)
