@@ -7,7 +7,7 @@ class Session(object):
   def __init__(self):
     self._session = libtorrent.session()
     self._session.listen_on(6881, 6891)
-
+    
   def AddTorrent(self, magnet_url, save_path):
     libtorrent.add_magnet_uri(self._session, magnet_url,
                               {'save_path': save_path})

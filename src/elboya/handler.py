@@ -20,7 +20,7 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
   def GetSettings(self):
     self.send_response(httplib.OK)
-    self.send_header('Content-Type', mimetypes.types_map['.json'])
+    self.send_header('Content-Type', 'application/json')
     self.end_headers()
 
     json.dump(self.server.settings.GetAll(), self.wfile)
@@ -29,7 +29,7 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     torrents = self.server.session.GetTorrents()
 
     self.send_response(httplib.OK)
-    self.send_header('Content-Type', mimetypes.types_map['.json'])
+    self.send_header('Content-Type', 'application/json')
     self.end_headers()
 
     json.dump({'torrents': torrents}, self.wfile, cls=torrent.JSONEncoder)

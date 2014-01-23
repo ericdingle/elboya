@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width">
     <title>Elboya Torrent</title>
     <!-- Reset -->
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
@@ -22,7 +23,7 @@
     <script src="js/util.js"></script>
     <script>
     $(document).ready(function() {
-      settings.init()
+      settings.init();
       ui.init();
       events.init();
     });
@@ -55,8 +56,8 @@
       </div>
 
       <div id="tabs-2">
-        <label for="magnet_url">Magnet URL</label>
-        <input type="text" id="magnet_url" class="ui-widget-content ui-corner-all"/>
+        <label for="magnet_url" id="magnet_url_title">Magnet URL</label>
+        <input type="text" id="magnet_url" class="ui-widget-content ui-corner-all" autofocus/>
         <label for="save_path">Save Path</label>
         <input type="text" id="save_path" class="ui-widget-content ui-corner-all"/>
         <button id="add_torrent">Add</button>
@@ -65,8 +66,12 @@
       <div id="tabs-3">
         <label for="default_save_path">Default Save Path</label>
         <input type="text" id="default_save_path" class="ui-widget-content ui-corner-all"/>
+        <label for="download_rate_limit">Download Rate Limit (-1 for unlimited)</label>
+        <input type="text" id="download_rate_limit" class="ui-widget-content ui-corner-all"/>
+        <label for="upload_rate_limit">Upload Rate Limit (-1 for unlimited)</label>
+        <input type="text" id="upload_rate_limit" class="ui-widget-content ui-corner-all"/>
         <button id="save_settings">Save</button>
       </div>
-    <div/>
+    </div>
   </body>
 </html>

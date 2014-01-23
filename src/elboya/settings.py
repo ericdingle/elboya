@@ -1,4 +1,5 @@
 import json
+import os.path
 
 class Settings(object):
 
@@ -9,11 +10,11 @@ class Settings(object):
     self._types = {}
 
     self._Define('default_save_path', '')
-    self._Define('download_rate_limit', -1)
-    self._Define('upload_rate_limit', -1)
-
+    self._Define('download_rate_limit', 0)
+    self._Define('upload_rate_limit', 0)
+    
     self._Load()
-
+    
   def _Define(self, name, default_value):
     self._values[name] = default_value
     self._types[name] = type(default_value)
@@ -21,9 +22,11 @@ class Settings(object):
   def _Load(self):
     # This function assumes that the settings file was written by this class,
     # and therefore must already be valid json with settings of the right type.
+    
     try:
       f = open(self._SETTINGS_FILE, 'r')
-    except IOError:
+    except IOError as e:
+      print 'Error loading settings: ' + e.strerror
       return
 
     values = json.load(f)
@@ -32,7 +35,7 @@ class Settings(object):
         self._values[name] = values[name]
 
     f.close()
-
+    
   def Get(self, name):
     return self._values.get(name)
 

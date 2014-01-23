@@ -10,18 +10,33 @@ events.init = function() {
   updateTorrents();
 
   $('#save_settings').click(saveSettings);
+  
 };
 
 function tabsActivate(event, ui) {
-  if ($('#tabs').tabs('option', 'active') == 1) {
-    $('#magnet_url').val('');
+  $(document).off('keypress');
+  var activeTab = $('#tabs').tabs('option', 'active');
+  if (activeTab == 1) {
+    $('#magnet_url').val('').focus();
     $('#save_path').val(settings.get('default_save_path'));
+    $(document).on('keypress', function(e) {
+      if (e.keyCode == 13) {
+       addTorrent(); 
+      }
+    });
+  } else if (activeTab == 2) {
+    $(document).on('keypress', function(e) {
+      if (e.keyCode == 13) {
+       saveSettings(); 
+      }
+    });
   }
 }
 
 function addTorrent() {
-  $(this).button('disable');
-
+  
+  $('#add_torrent').button('disable');
+  
   var magnet_url = $('#magnet_url').val();
   var save_path = $('#save_path').val();
 
@@ -62,9 +77,11 @@ function updateTorrents() {
 }
 
 function saveSettings() {
-  $(this).button('disable');
+  $('#save_settings').button('disable');
 
   settings.set('default_save_path', $('#default_save_path').val());
+  settings.set('download_rate_limit', $('#download_rate_limit').val());
+  settings.set('upload_rate_limit', $('#upload_rate_limit').val());
   settings.save().done(saveSettingsDone)
                  .fail(saveSettingsFail)
                  .always(saveSettingsAlways);

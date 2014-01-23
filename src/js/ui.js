@@ -96,6 +96,8 @@ function renderRemoveButton(cell, data, torrent) {
 
 function initSettings() {
   $('#default_save_path').val(settings.get('default_save_path'));
+  $('#download_rate_limit').val(settings.get('download_rate_limit'));
+  $('#upload_rate_limit').val(settings.get('upload_rate_limit'));
 }
 
 })();

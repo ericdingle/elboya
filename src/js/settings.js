@@ -4,7 +4,8 @@ var settings = {};
 
 settings.init = function() {
   var jqxhr = $.getJSON('/ajax/get_settings');
-  jqxhr.success(initSuccess);
+  jqxhr.done(initSuccess);
+  jqxhr.fail(initFail);
 };
 
 settings.onInit = $.Deferred();
@@ -14,6 +15,10 @@ var values = null;
 function initSuccess(data) {
   values = data;
   settings.onInit.resolve();
+}
+
+function initFail() {
+	console.log('settings.initFail');
 }
 
 settings.get = function(name) {
