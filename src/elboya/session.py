@@ -1,14 +1,17 @@
 import libtorrent
 
 from elboya import torrent
+from elboya import alert_handler
 
 class Session(object):
 
   def __init__(self):
     self._session = libtorrent.session()
     self._session.listen_on(6881, 6891)
+    self._alertHandler = alert_handler.AlertHandler(self).StartMonitoring()
     
   def AddTorrent(self, magnet_url, save_path):
+    #add_magnet_uri is deprecated, should use add_torrent with params['url'] = save_path instead
     libtorrent.add_magnet_uri(self._session, magnet_url,
                               {'save_path': save_path})
 

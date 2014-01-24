@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no">
     <title>Elboya Torrent</title>
     <!-- Reset -->
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
@@ -16,6 +16,7 @@
     <script src="js/jquery.dataTables.fnReloadAjax.js"></script>
     <!-- Elboya -->
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="css/index-mobile.css"/>
     <script src="js/events.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/torrents.js"></script>
@@ -32,13 +33,13 @@
   <body>
     <div id="tabs">
       <ul>
-        <li><a href="#tabs-1">Current Torrents</a></li>
-        <li><a href="#tabs-2">Add Torrent</a></li>
-        <li><a href="#tabs-3">Settings</a></li>
+        <li><a href="#tabs-1"><img src="img/downloads.png" class="tab-image" id="tabs_1_image" width="32px" height="32px"/><span class="tab-title">Downloads</span></a></li>
+        <li><a href="#tabs-2"><img src="img/add.png" class="tab-image" id="tabs_2_image" width="32px" height="32px"/><span class="tab-title">Add Torrent</span></a></li>
+        <li><a href="#tabs-3"><img src="img/settings.png" class="tab-image" id="tabs_3_image" width="32px" height="32px"/><span class="tab-title">Settings</span></a></li>
       </ul>
 
       <div id="tabs-1">
-        <table id="torrents">
+        <table id="torrents" width="100%">
           <thead>
             <tr>
               <th>Name</th>
