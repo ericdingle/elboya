@@ -21,10 +21,10 @@ class Settings(object):
   def _Load(self):
     # This function assumes that the settings file was written by this class,
     # and therefore must already be valid json with settings of the right type.
-    
     try:
       f = open(self._SETTINGS_FILE, 'r')
-    except IOError:
+    except IOError as e:
+      print 'Error loading settings: %s' % e
       return
 
     values = json.load(f)

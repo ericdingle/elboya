@@ -1,7 +1,6 @@
 import httplib
 import json
 import libtorrent
-import mimetypes
 import SimpleHTTPServer
 import urlparse
 

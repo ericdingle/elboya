@@ -14,6 +14,7 @@ events.init = function() {
 
 function tabsActivate(event, ui) {
   $(document).off('keypress');
+
   var activeTab = $('#tabs').tabs('option', 'active');
   if (activeTab == 1) {
     $('#magnet_url').val('').focus();
@@ -33,7 +34,6 @@ function tabsActivate(event, ui) {
 }
 
 function addTorrent() {
-  
   $('#add_torrent').button('disable');
   
   var magnet_url = $('#magnet_url').val();
