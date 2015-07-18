@@ -82,7 +82,7 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     for name, value in params.iteritems():
       if not self.server.settings.Set(name, value[0]):
-        self.send_error(httplib.BAD_REQUEST, 'Invalid setting')
+        self.send_error(httplib.BAD_REQUEST, 'Invalid setting: %s' % name)
         return
 
     self.server.settings.Save()
