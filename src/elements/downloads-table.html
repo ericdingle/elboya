@@ -1,0 +1,102 @@
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/elements/byte-format.html">
+<link rel="import" href="/elements/eta-format.html">
+<link rel="import" href="/elements/progress-bar.html">
+<dom-module id="downloads-table">
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    td {
+      border-bottom: 1px solid #EEE;
+      font-size: 14px;
+      padding: 10px 15px;
+      white-space: nowrap;
+    }
+    .name {
+      white-space: normal;
+      width: 100%;
+    }
+    .center {
+      text-align: center;
+    }
+    .right {
+      text-align: right;
+    }
+  </style>
+  <template>
+    <iron-ajax id="getTorrents"
+               url="/ajax/get_torrents"
+               handle-as="json"
+               on-response="updateTorrents">
+    </iron-ajax>
+    <iron-ajax id="removeTorrent"
+               url="/ajax/remove_torrent"
+               method="POST">
+    </iron-ajax>
+    <table>
+      <tr>
+        <td class="name">Name</td>
+        <td>State</td>
+        <td class="center">Progress</td>
+        <td class="right">Size</td>
+        <td class="right">Down Rate</td>
+        <td class="right">Up Rate</td>
+        <td class="right">ETA</td>
+        <td class="right">Peers</td>
+        <td class="center">Remove</td>
+      </tr>
+      <template is="dom-repeat" id="torrents" items="{{torrents}}">
+        <tr>
+          <td class="name">[[item.name]]</td>
+          <td>[[item.status.state]]</td>
+          <td class="center">
+            <progress-bar value="[[item.status.progress]]"></paper-progress>
+          </td>
+          <td class="right">
+            <byte-format value="[[item.info.total_size]]"></byte-format>
+          </td>
+          <td class="right">
+            <byte-format value="[[item.status.download_rate]]" suffix="/s"></byte-format>
+          </td>
+          <td class="right">
+            <byte-format value="[[item.status.upload_rate]]" suffix="/s"></byte-format>
+          </td>
+          <td class="right">
+            <eta-format size="[[item.info.total_size]]"
+                        progress="[[item.status.progress]]"
+                        rate="[[item.status.download_rate]]">
+            </eta-format>
+          </td>
+          <td class="right">[[item.status.num_peers]]</td>
+          <td class="center">
+            <paper-icon-button icon="delete" on-tap="removeTorrent"></paper-icon-button>
+          </td>
+        </tr>
+      </template>
+    </table>
+  </template>
+  <script>
+    Polymer({
+      is: 'downloads-table',
+      properties: {
+        torrents: Array
+      },
+      ready: function() {
+        this.getTorrents();
+      },
+      getTorrents: function() {
+        this.$.getTorrents.generateRequest();
+      },
+      updateTorrents: function(request) {
+        this.torrents = request.detail.response.torrents;
+        this.async(this.getTorrents, 1000);
+      },
+      removeTorrent: function(event) {
+        this.$.removeTorrent.body = 'hash=' + event.model.item.info.hash;
+        this.$.removeTorrent.generateRequest();
+      }
+    });
+  </script>
+</dom-module>

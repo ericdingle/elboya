@@ -1,78 +1,62 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no">
     <title>Elboya Torrent</title>
-    <!-- Reset -->
-    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
-    <!-- jQuery -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <!-- jQuery UI -->
-    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css"/>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-    <!-- DataTable -->
-    <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css"/>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-    <script src="js/jquery.dataTables.fnReloadAjax.js"></script>
-    <!-- Elboya -->
-    <link rel="stylesheet" type="text/css" href="css/index.css"/>
-    <link rel="stylesheet" type="text/css" href="css/index-mobile.css"/>
-    <script src="js/events.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/torrents.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/util.js"></script>
-    <script>
-    $(document).ready(function() {
-      settings.init();
-      ui.init();
-      events.init();
-    });
-    </script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+    <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+    <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+    <link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+    <link rel="import" href="/elements/downloads-page.html">
+    <link rel="import" href="/elements/settings-page.html">
+    <style>
+    body {
+      background-color: #EEE;
+      font-family: sans-serif;
+      margin: 0;
+    }
+
+    .title {
+      background-color: #3F51B5;
+      color: #FFF;
+      font-size: 30px;
+      padding-top: 5px;
+      text-indent: 20px;
+    }
+
+    iron-pages {
+      padding: 5px;
+    }
+    </style>
+    <style is="custom-style">
+    paper-tabs {
+      --paper-tabs: {
+        color: #FFF;
+        background-color: #3F51B5;
+      };
+    }
+    </style>
   </head>
   <body>
-    <div id="tabs">
-      <ul>
-        <li><a href="#tabs-1"><img src="img/downloads.png" class="tab-image" id="tabs_1_image" width="32px" height="32px"/><span class="tab-title">Downloads</span></a></li>
-        <li><a href="#tabs-2"><img src="img/add.png" class="tab-image" id="tabs_2_image" width="32px" height="32px"/><span class="tab-title">Add Torrent</span></a></li>
-        <li><a href="#tabs-3"><img src="img/settings.png" class="tab-image" id="tabs_3_image" width="32px" height="32px"/><span class="tab-title">Settings</span></a></li>
-      </ul>
-
-      <div id="tabs-1">
-        <table id="torrents" width="100%">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Size</th>
-              <th>Progress</th>
-              <th>Down Rate</th>
-              <th>Up Rate</th>
-              <th>ETA</th>
-              <th>Peers</th>
-              <th>Status</th>
-              <th>Remove</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-
-      <div id="tabs-2">
-        <label for="magnet_url">Magnet URL</label>
-        <input type="text" id="magnet_url" class="ui-widget-content ui-corner-all"/>
-        <label for="save_path">Save Path</label>
-        <input type="text" id="save_path" class="ui-widget-content ui-corner-all"/>
-        <button id="add_torrent">Add</button>
-      </div>
-
-      <div id="tabs-3">
-        <label for="default_save_path">Default Save Path</label>
-        <input type="text" id="default_save_path" class="ui-widget-content ui-corner-all"/>
-        <label for="download_rate_limit">Download Rate Limit (0 for unlimited)</label>
-        <input type="text" id="download_rate_limit" class="ui-widget-content ui-corner-all"/>
-        <label for="upload_rate_limit">Upload Rate Limit (0 for unlimited)</label>
-        <input type="text" id="upload_rate_limit" class="ui-widget-content ui-corner-all"/>
-        <button id="save_settings">Save</button>
-      </div>
-    </div>
+    <div class="title">Elboya Torrent</div>
+    <template is="dom-bind" id="tabs">
+      <paper-tabs selected="{{selected}}" noink no-slide>
+        <paper-tab>
+          <iron-icon icon="file-download"></iron-icon>
+          DOWNLOADS
+        </paper-tab>
+        <paper-tab>
+          <iron-icon icon="settings"></iron-icon>
+          SETTINGS
+        </paper-tab>
+      </paper-tabs>
+      <iron-pages selected="[[selected]]">
+        <div><downloads-page default-save-path="[[defaultSavePath]]"></downloads-page></div>
+        <div><settings-page default-save-path="{{defaultSavePath}}"></settings-page></div>
+      </iron-pages>
+    </template>
+    <script>
+      document.querySelector('#tabs').selected = 0;
+    </script>
   </body>
 </html>

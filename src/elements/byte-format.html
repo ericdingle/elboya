@@ -1,0 +1,32 @@
+<dom-module id="byte-format">
+  <template>
+    <span>{{format}}</span><span>{{suffix}}</span>
+  </template>
+  <script>
+    var byteUnits = ['B', 'kB', 'MB', 'GB'];  
+
+    Polymer({
+      is: 'byte-format',
+      properties: {
+        value: Number,
+        format: {
+          type: String,
+          computed: 'computeFormat(value)'
+        },
+        suffix: {
+          type: String,
+          value: ''
+        }
+      },
+      computeFormat: function(value) {
+        for (var i = 0; i < byteUnits.length - 1; ++i) {
+          if (value < 1024)
+            break;
+          value /= 1024;
+        }
+
+        return value.toFixed(1) + ' ' + byteUnits[i];
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,39 @@
+<dom-module id="eta-format">
+  <template>
+    <span>{{format}}</span>
+  </template>
+  <script>
+    var timeUnits = ['s', 'm', 'h', 'd'];
+    var timeAmounts = [60, 60, 24, Infinity];
+
+    Polymer({
+      is: 'eta-format',
+      properties: {
+        size: {type: Number, value: 0},
+        progress: {type: Number, value: 0},
+        rate: {type: Number, value: 0},
+        format: {
+          type: String,
+          computed: 'computeFormat(size, progress, rate)'
+        }
+      },
+      computeFormat: function(size, progress, rate) {
+        if (progress == 1)
+          return '-';
+
+        var sizeLeft = size * (1 - progress);
+        var timeLeft = Math.round(sizeLeft / rate);
+        var eta = [];
+
+        for (var i = 0; i < timeUnits.length; ++i) {
+          eta.unshift(timeLeft % timeAmounts[i] + timeUnits[i])
+          if (timeLeft < timeAmounts[i])
+            break;
+          timeLeft = Math.floor(timeLeft / timeAmounts[i]);
+        }
+
+        return eta.slice(0, 2).join(' ');
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,52 @@
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<dom-module id="add-dialog">
+  <template>
+    <paper-dialog id="paperDialog">
+      <form is="iron-form" id="form" method="post" action="/ajax/add_torrent"
+            on-iron-form-response="onAddTorrentResponse"
+            on-iron-form-error="onAddTorrentError">
+        Add Torrent
+        <paper-input name="magnet_url" label="Magnet URL"
+                     id="magnetUrl" always-float-label></paper-input>
+        <paper-input name="save_path" label="Save Path"
+                     value="[[defaultSavePath]]" always-float-label></paper-input>
+      </form>
+      <div class="buttons">
+        <paper-icon-button icon="cancel" dialog-dismiss></paper-icon-button>
+        <paper-icon-button icon="add-circle" on-tap="submit" dialog-confirm></paper-icon-button>
+      </div>
+    </paper-dialog>
+    <paper-toast id="toast"></paper-toast>
+  </template>
+  <script>
+    Polymer({
+      is: 'add-dialog',
+      properties: {
+        defaultSavePath: String
+      },
+
+      open: function() {
+        this.$.paperDialog.open();
+      },
+      submit: function() {
+        this.$.form.submit();
+        this.$.magnetUrl.value = '';
+      },
+      toast: function(msg) {
+        this.$.toast.text = msg;
+        this.$.toast.show();
+      },
+
+      onAddTorrentResponse: function(event) {
+        this.toast('Torrent added.');
+      },
+      onAddTorrentError: function(event, detail) {
+        this.toast('Failed to add torrent: ' + detail.error.message);
+      }
+    });
+  </script>
+</dom-module>

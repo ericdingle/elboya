@@ -1,0 +1,23 @@
+<link rel="import" href="/bower_components/paper-progress/paper-progress.html">
+<dom-module id="progress-bar">
+  <template>
+    <div>[[format]]</div>
+    <paper-progress value="[[value]]" max="1" step="0.01"></paper-progress>
+  </template>
+  <script>
+    Polymer({
+      is: 'progress-bar',
+      properties: {
+        value: Number,
+        format: {
+          type: Number,
+          computed: 'computeFormat(value)'
+        }
+      },
+      computeFormat: function(value) {
+        value *= 100;
+        return value.toFixed(2) + '%';
+      }
+    });
+  </script>
+</dom>

@@ -1,0 +1,98 @@
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-material/paper-material.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/elements/scaled-slider.html">
+<dom-module id="settings-page">
+  <style>
+    paper-material {
+      background-color: #FFF;
+      padding: 10px;
+    }
+    paper-slider {
+      width: 100%;
+    }
+  </style>
+  <template>
+    <iron-ajax id="getSettings"
+               url="/ajax/get_settings"
+               handle-as="json"
+               on-response="getSettingsResponse">
+    </iron-ajax>
+    <paper-material>
+      <form is="iron-form" id="form" method="post" action="/ajax/save_settings"
+            on-iron-form-response="saveSettingsResponse"
+            on-iron-form-error="saveSettingsError">
+        <div>Default Save Path</div>
+        <paper-input name="default_save_path" value="{{defaultSavePathLocal}}" no-label-float></paper-input>
+        <br/>
+        <div>Download Rate Limit (MB/s, 0 for unlimited)</div>
+        <paper-slider min="0" max="10" step="0.5" value="{{downloadRateLimit}}" pin></paper-slider>
+        <input type="hidden" name="download_rate_limit" value="[[downloadRateLimitInput]]"/>
+        <div>Upload Rate Limit (MB/s, 0 for unlimited)</div>
+        <paper-slider min="0" max="10" step="0.5" value="{{uploadRateLimit}}" pin></paper-slider>
+        <input type="hidden" name="upload_rate_limit" value="[[uploadRateLimitInput]]"/>
+      </form>
+      <paper-icon-button icon="undo" on-tap="getSettings"></paper-icon-button>
+      <paper-icon-button icon="save" on-tap="saveSettings"></paper-icon-button>
+    </paper-material>
+    <paper-toast id="toast"></paper-toast>
+  </template>
+  <script>
+    Polymer({
+      is: 'settings-page',
+      properties: {
+        defaultSavePath: {
+          type: String,
+          notify: true
+        },
+        defaultSavePathLocal: String,
+        downloadRateLimit: Number,
+        downloadRateLimitInput: {
+          type: Number,
+          computed: 'scaleUp(downloadRateLimit)'
+        },
+        uploadRateLimit: Number,
+        uploadRateLimitInput: {
+          type: Number,
+          computed: 'scaleUp(uploadRateLimit)'
+        }
+      },
+
+      scaleUp: function(value) {
+        return value * 1048576;
+      },
+
+      ready: function() {
+        this.getSettings();
+      },
+      toast: function(msg) {
+        this.$.toast.text = msg;
+        this.$.toast.show();
+      },
+
+      getSettings: function() {
+        this.$.getSettings.generateRequest();
+      },
+      getSettingsResponse: function(event) {
+        this.defaultSavePath = this.defaultSavePathLocal = event.detail.response.default_save_path;
+
+        this.downloadRateLimit = event.detail.response.download_rate_limit / 1048576;
+        this.uploadRateLimit = event.detail.response.upload_rate_limit / 1048576;
+      },
+
+      saveSettings: function() {
+        this.$.form.submit();
+      },
+      saveSettingsResponse: function(event) {
+        this.toast('Settings saved.');
+        this.defaultSavePath = this.defaultSavePathLocal;
+      },
+      saveSettingsError: function(event, obj) {
+        this.toast('Failed to save settings: ' + obj.error.message);
+      }
+    });  
+  </script>
+</dom-module>
