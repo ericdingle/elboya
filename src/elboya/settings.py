@@ -1,5 +1,6 @@
 import json
 
+
 class Settings(object):
 
   _SETTINGS_FILE = 'settings.json'
@@ -19,8 +20,6 @@ class Settings(object):
     self._types[name] = type(default_value)
 
   def _Load(self):
-    # This function assumes that the settings file was written by this class,
-    # and therefore must already be valid json with settings of the right type.
     try:
       f = open(self._SETTINGS_FILE, 'r')
     except IOError as e:
@@ -28,11 +27,11 @@ class Settings(object):
       return
 
     values = json.load(f)
+    f.close()
+
     for name, value in self._values.iteritems():
       if name in values:
         self._values[name] = values[name]
-
-    f.close()
     
   def Get(self, name):
     return self._values.get(name)

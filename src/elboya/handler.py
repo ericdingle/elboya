@@ -1,56 +1,56 @@
 import httplib
 import json
-import libtorrent
 import SimpleHTTPServer
 import urlparse
 
 from elboya import torrent
+
 
 class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
   def do_GET(self):
     path = self.path.split('?', 1)[0]
     if path == '/ajax/get_settings':
-      self.GetSettings()
+      self._GetSettings()
     elif path == '/ajax/get_torrents':
-      self.GetTorrents()
+      self._GetTorrents()
     else:
       SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
-  def GetSettings(self):
+  def _GetSettings(self):
     self.send_response(httplib.OK)
     self.send_header('Content-Type', 'application/json')
     self.end_headers()
 
-    json.dump(self.server.settings.GetAll(), self.wfile)
+    settings = self.server.settings.GetAll()
+    json.dump(settings, self.wfile)
 
-  def GetTorrents(self):
+  def _GetTorrents(self):
+    self.send_response(httplib.OK)
+    self.send_header('Content-Type', 'application/json')
+    self.end_headers()
+
     torrents = self.server.session.GetTorrents()
-
-    self.send_response(httplib.OK)
-    self.send_header('Content-Type', 'application/json')
-    self.end_headers()
-
     json.dump({'torrents': torrents}, self.wfile, cls=torrent.JSONEncoder)
 
   def do_POST(self):
     path = self.path.split('?', 1)[0]
     if path == '/ajax/add_torrent':
-      self.AddTorrent()
+      self._AddTorrent()
     elif path == '/ajax/remove_torrent':
-      self.RemoveTorrent()
+      self._RemoveTorrent()
     elif path == '/ajax/save_settings':
-      self.SaveSettings()
+      self._SaveSettings()
     else:
       self.send_error(httplib.NOT_FOUND)
 
-  def GetPostParams(self):
+  def _GetPostParams(self):
     content_length = int(self.headers.getheader('Content-Length'))
     content = self.rfile.read(content_length)
     return urlparse.parse_qs(content)
 
-  def AddTorrent(self):
-    params = self.GetPostParams()
+  def _AddTorrent(self):
+    params = self._GetPostParams()
 
     if 'magnet_url' not in params:
       self.send_error(httplib.BAD_REQUEST, 'Missing magnet URL')
@@ -64,8 +64,8 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     self.send_response(httplib.OK)
 
-  def RemoveTorrent(self):
-    params = self.GetPostParams()
+  def _RemoveTorrent(self):
+    params = self._GetPostParams()
     
     if 'hash' not in params:
       self.send_error(httplib.BAD_REQUEST, 'Missing hash')
@@ -77,8 +77,8 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     self.send_response(httplib.OK)
 
-  def SaveSettings(self):
-    params = self.GetPostParams()
+  def _SaveSettings(self):
+    params = self._GetPostParams()
 
     for name, value in params.iteritems():
       if not self.server.settings.Set(name, value[0]):

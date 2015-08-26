@@ -3,6 +3,7 @@ import BaseHTTPServer
 from elboya import session
 from elboya import settings
 
+
 class HTTPServer(BaseHTTPServer.HTTPServer):
 
   def __init__(self, *args, **kwds):

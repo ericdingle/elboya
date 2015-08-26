@@ -3,34 +3,34 @@ import libtorrent
 import random
 import time
 
+from collections import namedtuple
+
+
 class JSONEncoder(json.JSONEncoder):
 
   def default(self, obj):
-    if isinstance(obj, (libtorrent.torrent_handle, TestHandle)):
-      if obj.has_metadata():
-        info = {
-            'hash': str(obj.get_torrent_info().info_hash()),
-            'total_size': obj.get_torrent_info().total_size()
-        }
-      else:
-        info = {
-            'hash': '',
-            'total_size': 0
-        }
+    if isinstance(obj, TestInfo):
+      return {'hash': str(obj.info_hash()),
+              'total_size': obj.total_size()}
 
-      return {
-          'info': info,
-          'name': obj.name(),
-          'status': {
-              'progress': obj.status().progress,
-              'download_rate': obj.status().download_rate,
-              'upload_rate': obj.status().upload_rate,
-              'num_peers': obj.status().num_peers,
-              'state': str(obj.status().state)
-          }
-      }
+    if isinstance(obj, TestStatus):
+      return {'progress': obj.progress,
+              'download_rate': obj.download_rate,
+              'upload_rate': obj.upload_rate,
+              'num_peers': obj.num_peers,
+              'state': str(obj.state)}
+
+    if isinstance(obj, (libtorrent.torrent_handle, TestHandle)):
+      info = {'hash': '', 'total_size': 0}
+      if obj.has_metadata():
+        info = self.default(obj.get_torrent_info())
+
+      return {'info': info,
+              'name': obj.name(),
+              'status': self.default(obj.status())}
 
     return super(JSONEncoder, self).default(obj)
+
 
 class TestInfo(object):
 
@@ -44,14 +44,11 @@ class TestInfo(object):
   def total_size(self):
     return self._total_size
 
-class TestStatus(object):
 
-  def __init__(self, progress, download_rate, upload_rate, num_peers, state):
-    self.progress = progress
-    self.download_rate = download_rate
-    self.upload_rate = upload_rate
-    self.num_peers = num_peers
-    self.state = state
+TestStatus = namedtuple(
+    'TestStatus',
+    ['progress', 'download_rate', 'upload_rate', 'num_peers', 'state'])
+
 
 class TestHandle(object):
 
