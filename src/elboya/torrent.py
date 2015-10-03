@@ -9,11 +9,11 @@ from collections import namedtuple
 class JSONEncoder(json.JSONEncoder):
 
   def default(self, obj):
-    if isinstance(obj, TestInfo):
+    if isinstance(obj, (libtorrent.torrent_info, TestInfo)):
       return {'hash': str(obj.info_hash()),
               'total_size': obj.total_size()}
 
-    if isinstance(obj, TestStatus):
+    if isinstance(obj, (libtorrent.torrent_status, TestStatus)):
       return {'progress': obj.progress,
               'download_rate': obj.download_rate,
               'upload_rate': obj.upload_rate,
