@@ -29,7 +29,8 @@
     <iron-ajax id="getTorrents"
                url="/ajax/get_torrents"
                handle-as="json"
-               on-response="updateTorrents">
+               last-response="{{torrents}}"
+               on-response="scheduleUpdate">
     </iron-ajax>
     <iron-ajax id="removeTorrent"
                url="/ajax/remove_torrent"
@@ -47,7 +48,7 @@
         <td class="right">Peers</td>
         <td class="center">Remove</td>
       </tr>
-      <template is="dom-repeat" id="torrents" items="{{torrents}}">
+      <template is="dom-repeat" id="torrents" items="[[torrents]]">
         <tr>
           <td class="name">[[item.name]]</td>
           <td>[[item.status.state]]</td>
@@ -80,17 +81,13 @@
   <script>
     Polymer({
       is: 'downloads-table',
-      properties: {
-        torrents: Array
-      },
       ready: function() {
         this.getTorrents();
       },
       getTorrents: function() {
         this.$.getTorrents.generateRequest();
       },
-      updateTorrents: function(request) {
-        this.torrents = request.detail.response.torrents;
+      scheduleUpdate: function(request) {
         this.async(this.getTorrents, 1000);
       },
       removeTorrent: function(event) {

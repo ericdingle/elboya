@@ -7,6 +7,7 @@
     <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
     <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
     <link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+    <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
     <link rel="import" href="/elements/downloads-page.html">
     <link rel="import" href="/elements/settings-page.html">
     <style>
@@ -14,14 +15,6 @@
       background-color: #EEE;
       font-family: sans-serif;
       margin: 0;
-    }
-
-    .title {
-      background-color: #3F51B5;
-      color: #FFF;
-      font-size: 30px;
-      padding-top: 5px;
-      text-indent: 20px;
     }
 
     iron-pages {
@@ -38,25 +31,27 @@
     </style>
   </head>
   <body>
-    <div class="title">Elboya Torrent</div>
-    <template is="dom-bind" id="tabs">
-      <paper-tabs selected="{{selected}}" noink no-slide>
-        <paper-tab>
-          <iron-icon icon="file-download"></iron-icon>
-          DOWNLOADS
-        </paper-tab>
-        <paper-tab>
-          <iron-icon icon="settings"></iron-icon>
-          SETTINGS
-        </paper-tab>
-      </paper-tabs>
+    <template is="dom-bind" id="scope">
+      <paper-toolbar class="medium-tall">
+        <span class="title">Elboya Torrent</span>
+        <paper-tabs class="bottom" selected="{{selected}}" noink>
+          <paper-tab>
+            <iron-icon icon="file-download"></iron-icon>
+            DOWNLOADS
+          </paper-tab>
+          <paper-tab>
+            <iron-icon icon="settings"></iron-icon>
+            SETTINGS
+          </paper-tab>
+        </paper-tabs>
+      </paper-toolbar>
       <iron-pages selected="[[selected]]">
         <div><downloads-page default-save-path="[[defaultSavePath]]"></downloads-page></div>
         <div><settings-page default-save-path="{{defaultSavePath}}"></settings-page></div>
       </iron-pages>
     </template>
     <script>
-      document.querySelector('#tabs').selected = 0;
+      document.querySelector('#scope').selected = 0;
     </script>
   </body>
 </html>

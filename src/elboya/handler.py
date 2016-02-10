@@ -31,7 +31,7 @@ class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     self.end_headers()
 
     torrents = self.server.session.GetTorrents()
-    json.dump({'torrents': torrents}, self.wfile, cls=torrent.JSONEncoder)
+    json.dump(torrents, self.wfile, cls=torrent.JSONEncoder)
 
   def do_POST(self):
     path = self.path.split('?', 1)[0]
